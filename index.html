@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <meta name="theme-color" content="#0b0d14" />
+  <meta name="description" content="Tempo Clock Studio — a beautiful, customizable analog and digital clock powered by vanilla JavaScript." />
+  <title>Tempo Clock Studio</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script defer src="./script.js"></script>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#studio" aria-label="Tempo studio home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M16 8v9l6 4" stroke="currentColor" stroke-linecap="round" stroke-width="2.3"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+        </span>
+        <span>tempo<span class="brand-dot">.</span></span>
+      </a>
+
+      <div class="nav-group-label">YOUR WORKSPACE</div>
+      <nav class="sidebar-nav" aria-label="Sections">
+        <a href="#studio" class="nav-link active" data-nav="studio">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
+          Clock studio
+          <span class="nav-active-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#collections" class="nav-link" data-nav="collections">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+          Collections
+        </a>
+        <a href="#how-it-works" class="nav-link" data-nav="how-it-works">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.3 1.7c-.8.7-1.8 1.1-1.8 2.3"/><circle cx="12" cy="17" r=".8" fill="currentColor" stroke="none"/></svg>
+          How it works
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="inspiration-card">
+          <span class="sparkle" aria-hidden="true">✦</span>
+          <strong>Every second, yours.</strong>
+          <p>Style your clock. Make every moment feel different.</p>
+          <button class="text-action" id="surpriseButton" type="button">Surprise me <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="side-footer"><span class="online-dot" aria-hidden="true"></span> All systems ticking <span class="version">v 1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="studio">
+      <div class="topbar">
+        <div class="breadcrumbs"><span>WORKSPACE</span><span class="breadcrumb-slash">/</span><strong>CLOCK STUDIO</strong></div>
+        <div class="topbar-right">
+          <span class="live-pill"><span class="pulse" aria-hidden="true"></span> LIVE EXPERIENCE</span>
+          <span class="topbar-date" id="topbarDate">Today</span>
+        </div>
+      </div>
+
+      <header class="page-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> THE ART OF TIMEKEEPING</div>
+          <h1>Time, <em>your way.</em></h1>
+          <p>A little time, a lot of personality. Design a clock that feels like you.</p>
+        </div>
+        <div class="heading-monogram" aria-hidden="true">T<span>°</span></div>
+      </header>
+
+      <div class="workspace-grid">
+        <section class="preview-panel" aria-label="Live clock preview">
+          <div class="preview-topline">
+            <div class="preview-title"><span class="preview-indicator" aria-hidden="true"></span> LIVE PREVIEW <span class="preview-title-soft">/ DESIGN CANVAS</span></div>
+            <button class="icon-button preview-expand" id="fullscreenButton" type="button" title="Fullscreen preview" aria-label="Show clock fullscreen">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1v4m13-5h4a1 1 0 0 1 1 1v4M3 16v4a1 1 0 0 0 1 1h4m13-5v4a1 1 0 0 1-1 1h-4"/></svg>
+            </button>
+          </div>
+
+          <div class="clock-stage" id="clockStage">
+            <div class="orbit orbit-one" aria-hidden="true"></div>
+            <div class="orbit orbit-two" aria-hidden="true"></div>
+            <div class="orbit orbit-three" aria-hidden="true"></div>
+            <div class="radial-blur radial-blur-a" aria-hidden="true"></div>
+            <div class="radial-blur radial-blur-b" aria-hidden="true"></div>
+            <div class="floating-star star-a" aria-hidden="true">✦</div>
+            <div class="floating-star star-b" aria-hidden="true">✧</div>
+
+            <div class="watch-shell shape-round face-classic" id="watchShell" aria-label="Analog clock displaying the selected time zone" role="img">
+              <div class="watch-bezel">
+                <div class="watch-face">
+                  <div class="face-shine" aria-hidden="true"></div>
+                  <div class="hour-markers" id="hourMarkers" aria-hidden="true"></div>
+                  <div class="clock-number number-12" aria-hidden="true">12</div>
+                  <div class="clock-number number-3" aria-hidden="true">3</div>
+                  <div class="clock-number number-6" aria-hidden="true">6</div>
+                  <div class="clock-number number-9" aria-hidden="true">9</div>
+                  <div class="chrono-detail chrono-left" aria-hidden="true"><span>SECONDS</span><strong id="subdialSeconds">00</strong><i></i></div>
+                  <div class="chrono-detail chrono-right" aria-hidden="true"><span>DAY</span><strong id="subdialDay">TUE</strong><i></i></div>
+                  <div class="watch-brand" aria-hidden="true">TEMPO<span>●</span></div>
+                  <div class="hand hour-hand" id="hourHand" aria-hidden="true"></div>
+                  <div class="hand minute-hand" id="minuteHand" aria-hidden="true"></div>
+                  <div class="hand second-hand" id="secondHand" aria-hidden="true"></div>
+                  <div class="hand-pin" aria-hidden="true"></div>
+                  <div class="digital-face" id="digitalFace" aria-hidden="true">
+                    <span class="digital-label">CURRENT TIME</span>
+                    <span class="digital-main" id="digitalMain">10:08</span>
+                    <span class="digital-sub" id="digitalSub">:42 AM</span>
+                    <span class="digital-divider"></span>
+                    <span class="digital-day" id="digitalDay">TUESDAY · OCT 27</span>
+                    <span class="digital-city" id="digitalCity">LOCAL TIME</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview-footer">
+            <div class="time-readout">
+              <div class="time-readout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></div>
+              <div><span class="mini-label">CURRENT TIME</span><strong id="footerTime" aria-live="off">10:08:42 AM</strong></div>
+            </div>
+            <div class="zone-readout"><span class="mini-label">TIME ZONE</span><strong id="footerZone">Your local time</strong></div>
+            <span class="preview-live-chip"><span class="live-dot"></span> Real-time</span>
+          </div>
+        </section>
+
+        <aside class="customizer-panel" aria-label="Clock customization controls">
+          <div class="customizer-header"><div><span class="control-eyebrow">MAKE IT YOURS</span><h2>Customize <span>✦</span></h2></div><button class="reset-button" id="resetButton" type="button" title="Reset all settings"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11a8 8 0 1 1 2 6M4 5v6h6"/></svg> Reset</button></div>
+
+          <div class="control-scroll-area">
+            <fieldset class="control-group" id="clockTypeGroup"><legend><span class="group-index">01</span> Clock display</legend>
+              <div class="segmented" role="group" aria-label="Clock display type">
+                <button class="segment active" type="button" data-display="analog" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg> Analog</button>
+                <button class="segment" type="button" data-display="digital" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M7 11h10m-10 4h5"/></svg> Digital</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-group"><legend><span class="group-index">02</span> Dial design</legend>
+              <div class="face-options" role="group" aria-label="Dial design">
+                <button class="face-option active" type="button" data-face="classic" aria-pressed="true"><span class="face-icon face-icon-classic"><i></i><b></b></span><span>Classic</span></button>
+                <button class="face-option" type="button" data-face="minimal" aria-pressed="false"><span class="face-icon face-icon-minimal"><i></i><b></b></span><span>Minimal</span></button>
+                <button class="face-option" type="button" data-face="chrono" aria-pressed="false"><span class="face-icon face-icon-chrono"><i></i><b></b></span><span>Chrono</span></button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-group"><legend><span class="group-index">03</span> Accent color</legend>
+              <div class="colors-row" role="group" aria-label="Clock accent color">
+                <button class="color-choice active" type="button" data-color="violet" style="--swatch:#ad8bff" aria-label="Iris violet" aria-pressed="true"><span></span></button>
+                <button class="color-choice" type="button" data-color="aqua" style="--swatch:#57e4d4" aria-label="Aqua mint" aria-pressed="false"><span></span></button>
+                <button class="color-choice" type="button" data-color="blue" style="--swatch:#76abff" aria-label="Ocean blue" aria-pressed="false"><span></span></button>
+                <button class="color-choice" type="button" data-color="coral" style="--swatch:#ff8b88" aria-label="Coral pink" aria-pressed="false"><span></span></button>
+                <button class="color-choice" type="button" data-color="gold" style="--swatch:#ffd18b" aria-label="Warm gold" aria-pressed="false"><span></span></button>
+                <label class="custom-color-choice" title="Choose a custom color"><input type="color" id="customColor" value="#ad8bff" aria-label="Choose custom accent color"/><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></label>
+              </div>
+              <div class="color-caption"><span id="colorName">Iris violet</span><code id="colorHex">#AD8BFF</code></div>
+            </fieldset>
+
+            <fieldset class="control-group"><legend><span class="group-index">04</span> Clock shape</legend>
+              <div class="shape-options" role="group" aria-label="Clock outer shape">
+                <button class="shape-option active" type="button" data-shape="round" aria-label="Round clock" aria-pressed="true"><span class="shape-icon round"></span>Round</button>
+                <button class="shape-option" type="button" data-shape="squircle" aria-label="Soft square clock" aria-pressed="false"><span class="shape-icon squircle"></span>Soft</button>
+                <button class="shape-option" type="button" data-shape="square" aria-label="Square clock" aria-pressed="false"><span class="shape-icon square"></span>Square</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-group"><legend><span class="group-index">05</span> Preferences</legend>
+              <label class="preference-row"><span><strong>Show seconds</strong><small>Display the seconds hand</small></span><input type="checkbox" id="showSeconds" class="switch-input" checked/><span class="switch-track" aria-hidden="true"></span></label>
+              <label class="preference-row"><span><strong>Smooth motion</strong><small>Fluid, continuous hand movement</small></span><input type="checkbox" id="smoothMotion" class="switch-input" checked/><span class="switch-track" aria-hidden="true"></span></label>
+              <label class="preference-row"><span><strong>24-hour format</strong><small>Switch between 12h and 24h</small></span><input type="checkbox" id="format24" class="switch-input"/><span class="switch-track" aria-hidden="true"></span></label>
+              <label class="preference-row"><span><strong>Light appearance</strong><small>Change the entire studio theme</small></span><input type="checkbox" id="lightTheme" class="switch-input"/><span class="switch-track" aria-hidden="true"></span></label>
+            </fieldset>
+
+            <div class="control-group timezone-group"><label class="timezone-label" for="timezoneSelect"><span class="group-index">06</span> Time zone</label><div class="select-wrap"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18"/></svg><select id="timezoneSelect"><option value="local">Local time (device)</option><option value="Africa/Cairo">Cairo, Egypt</option><option value="UTC">UTC</option><option value="Europe/London">London, UK</option><option value="America/New_York">New York, US</option><option value="Asia/Tokyo">Tokyo, Japan</option><option value="Asia/Dubai">Dubai, UAE</option><option value="Asia/Kolkata">Mumbai, India</option></select><svg class="select-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></div>
+          </div>
+
+          <div class="customizer-foot"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.4-6.4-2.1 2.1M7.7 16.3l-2.1 2.1m12.8 0-2.1-2.1M7.7 7.7 5.6 5.6"/><circle cx="12" cy="12" r="4"/></svg>Your choices are saved automatically.</div>
+        </aside>
+      </div>
+
+      <section class="collections" id="collections" aria-labelledby="collectionsTitle">
+        <div class="section-heading"><div><span class="control-eyebrow">A LITTLE INSPIRATION</span><h2 id="collectionsTitle">Explore the collection <span>↗</span></h2></div><span class="section-side-note">ONE CLICK, A WHOLE NEW MOOD</span></div>
+        <div class="preset-grid">
+          <button class="preset-card" type="button" data-preset="midnight"><span class="preset-art art-midnight"><span class="mini-watch" aria-hidden="true"><i></i><b></b></span><span class="art-number">01</span></span><span class="preset-text"><span><strong>Midnight Muse</strong><small>Dark · Classic · Violet</small></span><span class="preset-arrow" aria-hidden="true">↗</span></span></button>
+          <button class="preset-card" type="button" data-preset="sunrise"><span class="preset-art art-sunrise"><span class="mini-watch mini-watch-soft" aria-hidden="true"><i></i><b></b></span><span class="art-number">02</span></span><span class="preset-text"><span><strong>Golden Hour</strong><small>Light · Minimal · Gold</small></span><span class="preset-arrow" aria-hidden="true">↗</span></span></button>
+          <button class="preset-card" type="button" data-preset="future"><span class="preset-art art-future"><span class="mini-digital" aria-hidden="true">10:08</span><span class="art-number">03</span></span><span class="preset-text"><span><strong>Future Frequency</strong><small>Dark · Digital · Aqua</small></span><span class="preset-arrow" aria-hidden="true">↗</span></span></button>
+        </div>
+      </section>
+
+      <footer class="site-footer" id="how-it-works"><span>© <span id="copyrightYear">2026</span> TEMPO STUDIO · MADE WITH HTML, CSS & JAVASCRIPT</span><span>Want to learn how it works? Open the <a href="./README.md" target="_blank" rel="noopener">README</a> <span aria-hidden="true">↗</span></span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
